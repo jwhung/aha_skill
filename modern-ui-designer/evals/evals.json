@@ -1,0 +1,23 @@
+{
+  "skill_name": "modern-ui-designer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to create a modern button component with multiple variants (primary, secondary, ghost) and sizes (sm, md, lg). It should support dark mode, be fully accessible with proper keyboard navigation and ARIA labels, and use Tailwind CSS. Please provide the complete, runnable React component code.",
+      "expected_output": "A complete React component using Tailwind CSS with button variants, size states, dark mode support via CSS variables or Tailwind's dark mode, accessibility attributes (aria-label, focus states), and usage examples. The component should handle disabled and loading states.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Design a contact form component with the following fields: name, email, subject (dropdown), and message. It needs input validation with error messages, success state after submission, floating labels, and should work in both light and dark themes. Use CSS-in-JS with styled-components.",
+      "expected_output": "A React form component built with styled-components that includes: labeled inputs with floating label animation, validation logic with error display, success confirmation state, theme support for light/dark modes, proper semantic HTML and accessibility (labels, ARIA describedby for errors), and responsive layout.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Create a responsive pricing card component for a SaaS product. It should have a glassmorphism effect, hover lift animation, display pricing tiers, feature lists, and a call-to-action button. Make it mobile-first and include accessibility features. You can choose any modern CSS approach.",
+      "expected_output": "A responsive pricing card component with: glassmorphism styling (backdrop-filter, semi-transparent background), smooth hover lift animation (transform translateY), mobile-first responsive design, proper color contrast for accessibility, semantic HTML structure, and usage examples showing multiple pricing tiers side by side.",
+      "files": []
+    }
+  ]
+}
