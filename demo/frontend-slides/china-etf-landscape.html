@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国国内ETF基金全格局</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===========================================
+           VIEWPORT FITTING: MANDATORY BASE STYLES
+           =========================================== */
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            padding: var(--slide-padding);
+        }
+
+        :root {
+            --title-size: clamp(1.5rem, 5vw, 4rem);
+            --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+            --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+            --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+            --small-size: clamp(0.65rem, 1vw, 0.875rem);
+            --slide-padding: clamp(1rem, 4vw, 4rem);
+            --content-gap: clamp(0.5rem, 2vw, 2rem);
+            --element-gap: clamp(0.25rem, 1vw, 1rem);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 0.6s;
+
+            /* Notebook Tabs Theme Colors */
+            --bg-outer: #2d2d2d;
+            --bg-page: #f8f6f1;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            --tab-1: #98d4bb;
+            --tab-2: #c7b8ea;
+            --tab-3: #f4b8c5;
+            --tab-4: #a8d8ea;
+            --tab-5: #ffe6a7;
+            --accent-warm: #d4a574;
+        }
+
+        .card, .container, .content-box {
+            max-width: min(90vw, 1000px);
+            max-height: min(80vh, 700px);
+        }
+
+        .feature-list, .bullet-list {
+            gap: clamp(0.4rem, 1vh, 1rem);
+        }
+
+        .feature-list li, .bullet-list li {
+            font-size: var(--body-size);
+            line-height: 1.4;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        img, .image-container {
+            max-width: 100%;
+            max-height: min(50vh, 400px);
+            object-fit: contain;
+        }
+
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 3vw, 2rem);
+                --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+                --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+                --h2-size: clamp(1rem, 3vw, 1.75rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+                --title-size: clamp(1.1rem, 4vw, 2rem);
+                --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            .nav-dots, .keyboard-hint, .decorative {
+                display: none;
+            }
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size: clamp(1rem, 3.5vw, 1.5rem);
+                --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --title-size: clamp(1.25rem, 7vw, 2.5rem);
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        /* ===========================================
+           BASE STYLES
+           =========================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-outer);
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                        transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal:nth-child(1) { transition-delay: 0.1s; }
+        .reveal:nth-child(2) { transition-delay: 0.2s; }
+        .reveal:nth-child(3) { transition-delay: 0.3s; }
+        .reveal:nth-child(4) { transition-delay: 0.4s; }
+        .reveal:nth-child(5) { transition-delay: 0.5s; }
+        .reveal:nth-child(6) { transition-delay: 0.6s; }
+
+        /* ===========================================
+           NOTEBOOK TABS THEME STYLES
+           =========================================== */
+        .paper-card {
+            background: var(--bg-page);
+            width: min(92vw, 1100px);
+            height: min(88vh, 750px);
+            border-radius: 8px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .binder-holes {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            z-index: 10;
+        }
+
+        .hole {
+            width: 14px;
+            height: 14px;
+            background: var(--bg-outer);
+            border-radius: 50%;
+        }
+
+        .tabs {
+            position: absolute;
+            right: -35px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .tab {
+            width: 35px;
+            border-radius: 0 10px 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: clamp(0.55rem, 0.9vh, 0.75rem);
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: rgba(0,0,0,0.7);
+            padding: 12px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .tab:hover { transform: translateX(5px); }
+        .tab:nth-child(1) { background: var(--tab-1); height: 70px; }
+        .tab:nth-child(2) { background: var(--tab-2); height: 90px; }
+        .tab:nth-child(3) { background: var(--tab-3); height: 110px; }
+        .tab:nth-child(4) { background: var(--tab-4); height: 85px; }
+        .tab:nth-child(5) { background: var(--tab-5); height: 75px; }
+
+        .section-number {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 400;
+            color: var(--text-primary);
+            opacity: 0.12;
+            position: absolute;
+            top: 30px;
+            left: 50px;
+            line-height: 1;
+        }
+
+        .card-content {
+            flex: 1;
+            padding: clamp(30px, 5vw, 60px) clamp(40px, 6vw, 80px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        h1 {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: clamp(15px, 2vh, 25px);
+        }
+
+        h2 {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: clamp(12px, 1.5vh, 20px);
+        }
+
+        h3 {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: clamp(8px, 1vh, 12px);
+        }
+
+        p, li {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .subtitle {
+            font-size: clamp(14px, 1.8vw, 18px);
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: clamp(20px, 3vh, 30px);
+        }
+
+        .divider {
+            width: 50px;
+            height: 2px;
+            background: var(--accent-warm);
+            margin: clamp(15px, 2vh, 25px) 0;
+        }
+
+        /* Content layouts */
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: clamp(8px, 1.2vh, 12px);
+        }
+
+        .bullet-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-warm);
+            border-radius: 50%;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(20px, 3vw, 40px);
+        }
+
+        @media (max-width: 768px) {
+            .two-col { grid-template-columns: 1fr; }
+            .tabs { right: -25px; }
+            .tab { width: 25px; font-size: 10px; }
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--tab-1)20, var(--tab-4)20);
+            border-left: 4px solid var(--accent-warm);
+            padding: clamp(15px, 2vw, 25px);
+            border-radius: 0 8px 8px 0;
+            margin: clamp(15px, 2vh, 25px) 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: clamp(15px, 2vw, 25px);
+            margin-top: clamp(15px, 2vh, 25px);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: clamp(15px, 2vw, 25px);
+            background: rgba(0,0,0,0.03);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .type-card {
+            background: rgba(0,0,0,0.03);
+            padding: clamp(15px, 2vw, 25px);
+            border-radius: 8px;
+            border-top: 3px solid var(--tab-1);
+        }
+
+        .type-card.bond { border-top-color: var(--tab-2); }
+        .type-card.commodity { border-top-color: var(--tab-3); }
+        .type-card.currency { border-top-color: var(--tab-4); }
+        .type-card.cross-border { border-top-color: var(--tab-5); }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent-warm);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        /* Navigation dots */
+        .nav-dots {
+            position: fixed;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: var(--accent-warm);
+            transform: scale(1.3);
+        }
+
+        @media (max-width: 900px) {
+            .nav-dots { right: 15px; }
+        }
+
+        /* Table styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--small-size);
+            margin-top: clamp(10px, 1.5vh, 20px);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: clamp(8px, 1vw, 12px);
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            font-weight: 700;
+            color: var(--text-primary);
+            background: rgba(0,0,0,0.03);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: var(--small-size);
+            font-weight: 500;
+        }
+
+        .tag-blue { background: var(--tab-4); color: #1a1a1a; }
+        .tag-green { background: var(--tab-1); color: #1a1a1a; }
+        .tag-pink { background: var(--tab-3); color: #1a1a1a; }
+        .tag-yellow { background: var(--tab-5); color: #1a1a1a; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="nav-dots" id="navDots"></div>
+
+    <!-- Slide 1: Title -->
+    <section class="slide" data-slide="1">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content" style="text-align: center;">
+                <div class="reveal" style="font-family: 'Bodoni Moda', serif; font-size: clamp(3rem, 7vw, 6rem); opacity: 0.1; color: var(--text-primary); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); white-space: nowrap;">ETF</div>
+                <h1 class="reveal" style="position: relative; z-index: 1;">中国国内ETF<br>基金全格局</h1>
+                <div class="divider reveal" style="margin: 20px auto;"></div>
+                <p class="subtitle reveal">Exchange Traded Fund · 交易型开放式指数基金</p>
+                <p class="reveal" style="margin-top: 30px; color: var(--text-secondary);">一站式了解中国ETF市场的完整生态</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 2: Table of Contents -->
+    <section class="slide" data-slide="2">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">02</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <h2 class="reveal">目录</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 20px;">
+                    <div class="reveal">
+                        <h3>第一部分 · 基础认知</h3>
+                        <ul class="bullet-list">
+                            <li>什么是ETF？</li>
+                            <li>ETF的发展历程</li>
+                            <li>中国ETF市场规模</li>
+                        </ul>
+                    </div>
+                    <div class="reveal">
+                        <h3>第二部分 · 产品类型</h3>
+                        <ul class="bullet-list">
+                            <li>股票型ETF详解</li>
+                            <li>债券型与商品型ETF</li>
+                            <li>跨境ETF与货币型ETF</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="two-col" style="margin-top: 20px;">
+                    <div class="reveal">
+                        <h3>第三部分 · 市场格局</h3>
+                        <ul class="bullet-list">
+                            <li>主要ETF发行商</li>
+                            <li>头部ETF产品</li>
+                            <li>ETF vs 普通基金</li>
+                        </ul>
+                    </div>
+                    <div class="reveal">
+                        <h3>第四部分 · 投资指南</h3>
+                        <ul class="bullet-list">
+                            <li>投资策略与风险控制</li>
+                            <li>费用结构与选择方法</li>
+                            <li>2024市场趋势与展望</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: What is ETF -->
+    <section class="slide" data-slide="3">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">03</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第一部分 · 基础认知</p>
+                <h2 class="reveal">什么是ETF？</h2>
+                <div class="divider reveal"></div>
+                <p class="reveal" style="font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-primary); margin-bottom: 20px;">
+                    ETF（Exchange Traded Fund）即<strong>交易型开放式指数基金</strong>，是一种在交易所上市交易的、基金份额可变的开放式基金。
+                </p>
+                <div class="highlight-box reveal">
+                    <p style="color: var(--text-primary); font-weight: 500;">核心特征：像股票一样在二级市场买卖，同时兼具基金的分散投资特点</p>
+                </div>
+                <div class="two-col" style="margin-top: 20px;">
+                    <div class="reveal">
+                        <h3>交易特点</h3>
+                        <ul class="bullet-list">
+                            <li>实时交易，价格每秒变动</li>
+                            <li>可日内多次买卖（T+1）</li>
+                            <li>最小交易单位：100份</li>
+                            <li>交易成本：佣金（通常万1-万3）</li>
+                        </ul>
+                    </div>
+                    <div class="reveal">
+                        <h3>基金特点</h3>
+                        <ul class="bullet-list">
+                            <li>跟踪特定指数表现</li>
+                            <li>被动管理，低费率</li>
+                            <li>持仓透明，每日公布</li>
+                            <li>分散投资，降低个股风险</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: ETF History -->
+    <section class="slide" data-slide="4">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">04</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第一部分 · 基础认知</p>
+                <h2 class="reveal">ETF发展历程</h2>
+                <div class="divider reveal"></div>
+                <div class="reveal" style="margin-top: 20px;">
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="display: flex; align-items: flex-start; gap: 20px;">
+                            <div style="min-width: 80px; font-weight: 700; color: var(--accent-warm);">1993年</div>
+                            <div>
+                                <strong style="color: var(--text-primary);">全球首只ETF诞生</strong>
+                                <p style="margin-top: 5px;">美国SPDR S&P 500 ETF（SPY）发行，标志着ETF时代的开启</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 20px;">
+                            <div style="min-width: 80px; font-weight: 700; color: var(--accent-warm);">2004年</div>
+                            <div>
+                                <strong style="color: var(--text-primary);">中国首只ETF</strong>
+                                <p style="margin-top: 5px;">华夏上证50ETF（510050）成立，开启中国ETF市场</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 20px;">
+                            <div style="min-width: 80px; font-weight: 700; color: var(--accent-warm);">2012年</div>
+                            <div>
+                                <strong style="color: var(--text-primary);">跨境ETF问世</strong>
+                                <p style="margin-top: 5px;">恒生ETF、H股ETF等跨境产品推出，拓宽投资范围</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 20px;">
+                            <div style="min-width: 80px; font-weight: 700; color: var(--accent-warm);">2019年</div>
+                            <div>
+                                <strong style="color: var(--text-primary);">ETF大爆发</strong>
+                                <p style="margin-top: 5px;">科创板ETF、科技类ETF火爆，规模快速增长</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 20px;">
+                            <div style="min-width: 80px; font-weight: 700; color: var(--accent-warm);">2020-2024</div>
+                            <div>
+                                <strong style="color: var(--text-primary);">万亿时代</strong>
+                                <p style="margin-top: 5px;">中国ETF总规模突破2万亿元，产品数量超过900只</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: Market Size -->
+    <section class="slide" data-slide="5">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">05</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第一部分 · 基础认知</p>
+                <h2 class="reveal">中国ETF市场规模</h2>
+                <div class="divider reveal"></div>
+                <div class="stat-grid reveal">
+                    <div class="stat-item">
+                        <span class="stat-value">2.1万亿</span>
+                        <span class="stat-label">总规模（元）</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">900+</span>
+                        <span class="stat-label">产品数量</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">50+</span>
+                        <span class="stat-label">发行商</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">1.2万亿</span>
+                        <span class="stat-label">股票ETF规模</span>
+                    </div>
+                </div>
+                <div class="highlight-box reveal" style="margin-top: 25px;">
+                    <p style="color: var(--text-primary);"><strong>关键趋势：</strong>2020年以来，中国ETF市场年均增长率超过30%，股票ETF占比持续提升，宽基指数ETF成为主力军。</p>
+                </div>
+                <div class="two-col" style="margin-top: 20px;">
+                    <div class="reveal">
+                        <h3>规模分布</h3>
+                        <ul class="bullet-list">
+                            <li>股票ETF：约60%</li>
+                            <li>货币ETF：约20%</li>
+                            <li>债券ETF：约8%</li>
+                            <li>商品及跨境ETF：约12%</li>
+                        </ul>
+                    </div>
+                    <div class="reveal">
+                        <h3>投资者结构</h3>
+                        <ul class="bullet-list">
+                            <li>机构投资者：约55%</li>
+                            <li>个人投资者：约45%</li>
+                            <li>机构占比逐年提升</li>
+                            <li>长期配置需求增长</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: ETF Types Overview -->
+    <section class="slide" data-slide="6">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">06</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第二部分 · 产品类型</p>
+                <h2 class="reveal">ETF主要类型</h2>
+                <div class="divider reveal"></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+                    <div class="type-card reveal">
+                        <h3>股票型ETF</h3>
+                        <p style="font-size: var(--small-size);">规模最大、品种最多的ETF类型，跟踪股票指数表现</p>
+                        <div style="margin-top: 10px;">
+                            <span class="tag tag-green">规模占比60%</span>
+                        </div>
+                    </div>
+                    <div class="type-card bond reveal">
+                        <h3>债券型ETF</h3>
+                        <p style="font-size: var(--small-size);">跟踪债券指数，适合稳健型投资者，波动较小</p>
+                        <div style="margin-top: 10px;">
+                            <span class="tag tag-blue">规模占比8%</span>
+                        </div>
+                    </div>
+                    <div class="type-card commodity reveal">
+                        <h3>商品型ETF</h3>
+                        <p style="font-size: var(--small-size);">主要投资黄金等大宗商品，对冲通胀风险</p>
+                        <div style="margin-top: 10px;">
+                            <span class="tag tag-pink">黄金ETF为主</span>
+                        </div>
+                    </div>
+                    <div class="type-card currency reveal">
+                        <h3>货币型ETF</h3>
+                        <p style="font-size: var(--small-size);">类似货币基金，T+0交易，流动性管理工具</p>
+                        <div style="margin-top: 10px;">
+                            <span class="tag tag-yellow">规模占比20%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="type-card cross-border reveal" style="margin-top: 15px;">
+                    <h3>跨境ETF</h3>
+                    <p style="font-size: var(--small-size);">投资境外市场指数，如恒生指数、纳斯达克100、标普500等，实现全球化资产配置</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Stock ETF Details -->
+    <section class="slide" data-slide="7">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">07</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第二部分 · 产品类型</p>
+                <h2 class="reveal">股票型ETF详解</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <div class="highlight-box">
+                            <h3>宽基ETF</h3>
+                            <p style="font-size: var(--small-size);">跟踪大盘指数，覆盖面广</p>
+                        </div>
+                        <ul class="bullet-list" style="margin-top: 10px;">
+                            <li>上证50ETF（510050）</li>
+                            <li>沪深300ETF（510300）</li>
+                            <li>中证500ETF（510500）</li>
+                            <li>创业板ETF（159915）</li>
+                            <li>科创板50ETF（588000）</li>
+                        </ul>
+                    </div>
+                    <div class="reveal">
+                        <div class="highlight-box" style="border-left-color: var(--tab-2);">
+                            <h3>行业ETF</h3>
+                            <p style="font-size: var(--small-size);">专注特定行业，把握结构性机会</p>
+                        </div>
+                        <ul class="bullet-list" style="margin-top: 10px;">
+                            <li>证券ETF（512880）</li>
+                            <li>银行ETF（512800）</li>
+                            <li>医药ETF（512010）</li>
+                            <li>科技ETF（515000）</li>
+                            <li>新能源ETF（516160）</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <h3>主题ETF</h3>
+                        <p style="font-size: var(--small-size);">紧跟市场热点主题</p>
+                        <p style="font-size: var(--small-size); margin-top: 5px;">芯片、人工智能、碳中和、数字经济、红利等</p>
+                    </div>
+                    <div class="reveal">
+                        <h3>策略ETF（Smart Beta）</h3>
+                        <p style="font-size: var(--small-size);">结合主动与被动投资</p>
+                        <p style="font-size: var(--small-size); margin-top: 5px;">红利低波、价值、成长、动量、质量等因子策略</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: Bond & Commodity ETF -->
+    <section class="slide" data-slide="8">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">08</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第二部分 · 产品类型</p>
+                <h2 class="reveal">债券型与商品型ETF</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <div class="highlight-box" style="border-left-color: var(--tab-2);">
+                            <h3>债券型ETF</h3>
+                            <p style="font-size: var(--small-size);">适合稳健配置，波动小，收益相对稳定</p>
+                        </div>
+                        <h3 style="margin-top: 15px;">主要产品</h3>
+                        <table class="data-table">
+                            <tr>
+                                <th>ETF名称</th>
+                                <th>跟踪指数</th>
+                            </tr>
+                            <tr>
+                                <td>国债ETF</td>
+                                <td>上证5年期国债</td>
+                            </tr>
+                            <tr>
+                                <td>十年国债ETF</td>
+                                <td>中证10年期国债</td>
+                            </tr>
+                            <tr>
+                                <td>城投债ETF</td>
+                                <td>中证城投债</td>
+                            </tr>
+                            <tr>
+                                <td>公司债ETF</td>
+                                <td>中证公司债</td>
+                            </tr>
+                        </table>
+                        <p style="margin-top: 10px; font-size: var(--small-size);"><strong>特点：</strong>T+0交易、费率低（约0.3%）、适合利率下行周期</p>
+                    </div>
+                    <div class="reveal">
+                        <div class="highlight-box" style="border-left-color: var(--tab-3);">
+                            <h3>商品型ETF</h3>
+                            <p style="font-size: var(--small-size);">以黄金ETF为主，对冲通胀和地缘风险</p>
+                        </div>
+                        <h3 style="margin-top: 15px;">黄金ETF</h3>
+                        <table class="data-table">
+                            <tr>
+                                <th>ETF名称</th>
+                                <th>代码</th>
+                            </tr>
+                            <tr>
+                                <td>华安黄金ETF</td>
+                                <td>518880</td>
+                            </tr>
+                            <tr>
+                                <td>博时黄金ETF</td>
+                                <td>159937</td>
+                            </tr>
+                            <tr>
+                                <td>易方达黄金ETF</td>
+                                <td>159934</td>
+                            </tr>
+                            <tr>
+                                <td>国泰黄金ETF</td>
+                                <td>518800</td>
+                            </tr>
+                        </table>
+                        <p style="margin-top: 10px; font-size: var(--small-size);"><strong>特点：</strong>跟踪上海金价格、可兑换实物黄金、与股市低相关</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: Cross-border & Currency ETF -->
+    <section class="slide" data-slide="9">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">09</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第二部分 · 产品类型</p>
+                <h2 class="reveal">跨境ETF与货币型ETF</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <div class="highlight-box" style="border-left-color: var(--tab-5);">
+                            <h3>跨境ETF</h3>
+                            <p style="font-size: var(--small-size);">足不出户，投资全球市场</p>
+                        </div>
+                        <h3 style="margin-top: 15px;">主要类型</h3>
+                        <ul class="bullet-list">
+                            <li><strong>港股ETF：</strong>恒生ETF、H股ETF、恒生科技ETF</li>
+                            <li><strong>美股ETF：</strong>纳斯达克100、标普500</li>
+                            <li><strong>商品ETF：</strong>原油ETF、商品期货ETF</li>
+                            <li><strong>区域ETF：</strong>日经225、德国DAX、越南股市</li>
+                        </ul>
+                        <p style="margin-top: 10px; font-size: var(--small-size);"><strong>注意：</strong>跨境ETF受汇率影响，存在QDII额度限制</p>
+                    </div>
+                    <div class="reveal">
+                        <div class="highlight-box" style="border-left-color: var(--tab-4);">
+                            <h3>货币型ETF</h3>
+                            <p style="font-size: var(--small-size);">场内"余额宝"，流动性管理利器</p>
+                        </div>
+                        <h3 style="margin-top: 15px;">代表产品</h3>
+                        <table class="data-table">
+                            <tr>
+                                <th>ETF名称</th>
+                                <th>代码</th>
+                            </tr>
+                            <tr>
+                                <td>银华日利</td>
+                                <td>511880</td>
+                            </tr>
+                            <tr>
+                                <td>华宝添益</td>
+                                <td>511990</td>
+                            </tr>
+                            <tr>
+                                <td>建信添益</td>
+                                <td>003393</td>
+                            </tr>
+                            <tr>
+                                <td>理财金H</td>
+                                <td>511810</td>
+                            </tr>
+                        </table>
+                        <p style="margin-top: 10px; font-size: var(--small-size);"><strong>特点：</strong>T+0交易、日内回转、年化收益约2%、零交易成本</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 10: ETF Advantages -->
+    <section class="slide" data-slide="10">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">10</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第三部分 · 市场格局</p>
+                <h2 class="reveal">ETF的核心优势</h2>
+                <div class="divider reveal"></div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;">
+                    <div class="reveal" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">💰</div>
+                        <h3>成本低廉</h3>
+                        <p style="font-size: var(--small-size); margin-top: 8px;">管理费率通常0.15%-0.5%，远低于主动基金1%-1.5%</p>
+                    </div>
+                    <div class="reveal" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">👁️</div>
+                        <h3>透明度高</h3>
+                        <p style="font-size: var(--small-size); margin-top: 8px;">持仓每日公布，清楚知道买了什么股票</p>
+                    </div>
+                    <div class="reveal" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
+                        <h3>交易便捷</h3>
+                        <p style="font-size: var(--small-size); margin-top: 8px;">像股票一样实时买卖，资金到账快</p>
+                    </div>
+                    <div class="reveal" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
+                        <h3>分散投资</h3>
+                        <p style="font-size: var(--small-size); margin-top: 8px;">一篮子股票，天然实现投资组合分散化</p>
+                    </div>
+                    <div class="reveal" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+                        <h3>效率高</h3>
+                        <p style="font-size: var(--small-size); margin-top: 8px;">被动跟踪指数，避免主动选股失误</p>
+                    </div>
+                    <div class="reveal" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
+                        <h3>风险可控</h3>
+                        <p style="font-size: var(--small-size); margin-top: 8px;">不会踩雷单一个股，最大风险是市场风险</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 11: ETF vs Regular Fund -->
+    <section class="slide" data-slide="11">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">11</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第三部分 · 市场格局</p>
+                <h2 class="reveal">ETF vs 普通基金</h2>
+                <div class="divider reveal"></div>
+                <div class="reveal" style="margin-top: 15px;">
+                    <table class="data-table" style="font-size: var(--body-size);">
+                        <tr>
+                            <th style="width: 20%;">对比维度</th>
+                            <th style="width: 40%;">ETF</th>
+                            <th style="width: 40%;">普通开放式基金</th>
+                        </tr>
+                        <tr>
+                            <td><strong>交易方式</strong></td>
+                            <td>像股票一样实时买卖，价格实时变动</td>
+                            <td>每日收盘后统一结算，按净值成交</td>
+                        </tr>
+                        <tr>
+                            <td><strong>交易时间</strong></td>
+                            <td>盘中可随时交易（9:30-11:30, 13:00-15:00）</td>
+                            <td>全天可申赎，但统一按收盘净值成交</td>
+                        </tr>
+                        <tr>
+                            <td><strong>费率</strong></td>
+                            <td>管理费率0.15%-0.5%，交易佣金万1-万3</td>
+                            <td>管理费1%-1.5%，申购费0.1%-1.5%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>透明度</strong></td>
+                            <td>持仓每日公布，PCF清单公开</td>
+                            <td>季报/半年报/年报披露持仓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>灵活性</strong></td>
+                            <td>可随时止盈止损，适合波段操作</td>
+                            <td>适合长期持有，短期赎回费高</td>
+                        </tr>
+                        <tr>
+                            <td><strong>分红</strong></td>
+                            <td>通常现金分红，可再投资</td>
+                            <td>可选择红利再投资或现金分红</td>
+                        </tr>
+                        <tr>
+                            <td><strong>适合人群</strong></td>
+                            <td>有一定投资经验，追求效率的投资者</td>
+                            <td>希望省心、长期定投的投资者</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 12: Major Issuers -->
+    <section class="slide" data-slide="12">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">12</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第三部分 · 市场格局</p>
+                <h2 class="reveal">主要ETF发行商</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <h3>头部发行商（规模>1000亿）</h3>
+                        <table class="data-table">
+                            <tr>
+                                <th>公司</th>
+                                <th>特点</th>
+                            </tr>
+                            <tr>
+                                <td><strong>华夏基金</strong></td>
+                                <td>ETF龙头，首只ETF发行商，产品线最全</td>
+                            </tr>
+                            <tr>
+                                <td><strong>易方达基金</strong></td>
+                                <td>规模增长最快，费率低，创新产品多</td>
+                            </tr>
+                            <tr>
+                                <td><strong>华泰柏瑞</strong></td>
+                                <td>沪深300ETF规模最大，流动性好</td>
+                            </tr>
+                            <tr>
+                                <td><strong>南方基金</strong></td>
+                                <td>中证500ETF龙头，产品布局均衡</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="reveal">
+                        <h3>特色发行商</h3>
+                        <table class="data-table">
+                            <tr>
+                                <th>公司</th>
+                                <th>特点</th>
+                            </tr>
+                            <tr>
+                                <td><strong>国泰基金</strong></td>
+                                <td>证券ETF、军工ETF等行业主题领先</td>
+                            </tr>
+                            <tr>
+                                <td><strong>华安基金</strong></td>
+                                <td>黄金ETF规模最大，商品ETF专家</td>
+                            </tr>
+                            <tr>
+                                <td><strong>博时基金</strong></td>
+                                <td>债券ETF布局完善，固收+策略</td>
+                            </tr>
+                            <tr>
+                                <td><strong>嘉实基金</strong></td>
+                                <td>Smart Beta策略ETF，产品创新</td>
+                            </tr>
+                            <tr>
+                                <td><strong>广发基金</strong></td>
+                                <td>科技类ETF布局积极，跨境产品丰富</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <p class="reveal" style="margin-top: 15px; font-size: var(--small-size);">
+                    <strong>选择建议：</strong>优先考虑规模大、流动性好、跟踪误差小的产品，头部公司的旗舰ETF通常更可靠。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 13: Top ETFs -->
+    <section class="slide" data-slide="13">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">13</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第三部分 · 市场格局</p>
+                <h2 class="reveal">头部ETF产品一览</h2>
+                <div class="divider reveal"></div>
+                <div class="reveal" style="margin-top: 15px;">
+                    <table class="data-table">
+                        <tr>
+                            <th>ETF名称</th>
+                            <th>代码</th>
+                            <th>规模（亿）</th>
+                            <th>跟踪指数</th>
+                            <th>管理公司</th>
+                        </tr>
+                        <tr>
+                            <td>华泰柏瑞沪深300ETF</td>
+                            <td>510300</td>
+                            <td>1200+</td>
+                            <td>沪深300</td>
+                            <td>华泰柏瑞</td>
+                        </tr>
+                        <tr>
+                            <td>华夏上证50ETF</td>
+                            <td>510050</td>
+                            <td>800+</td>
+                            <td>上证50</td>
+                            <td>华夏基金</td>
+                        </tr>
+                        <tr>
+                            <td>南方中证500ETF</td>
+                            <td>510500</td>
+                            <td>500+</td>
+                            <td>中证500</td>
+                            <td>南方基金</td>
+                        </tr>
+                        <tr>
+                            <td>华夏科创50ETF</td>
+                            <td>588000</td>
+                            <td>700+</td>
+                            <td>科创50</td>
+                            <td>华夏基金</td>
+                        </tr>
+                        <tr>
+                            <td>易方达创业板ETF</td>
+                            <td>159915</td>
+                            <td>600+</td>
+                            <td>创业板指</td>
+                            <td>易方达</td>
+                        </tr>
+                        <tr>
+                            <td>国泰证券ETF</td>
+                            <td>512880</td>
+                            <td>300+</td>
+                            <td>中证全指证券</td>
+                            <td>国泰基金</td>
+                        </tr>
+                        <tr>
+                            <td>华安黄金ETF</td>
+                            <td>518880</td>
+                            <td>140+</td>
+                            <td>黄金现货</td>
+                            <td>华安基金</td>
+                        </tr>
+                    </table>
+                </div>
+                <p class="reveal" style="margin-top: 15px; font-size: var(--small-size);">
+                    注：规模数据随市场变动，请以最新公告为准。规模大通常意味着流动性好、跟踪误差小。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 14: Investment Strategies -->
+    <section class="slide" data-slide="14">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">14</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第四部分 · 投资指南</p>
+                <h2 class="reveal">ETF投资策略</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <div class="highlight-box">
+                            <h3>定投策略</h3>
+                            <p style="font-size: var(--small-size);">适合大多数投资者的稳健策略</p>
+                        </div>
+                        <ul class="bullet-list" style="margin-top: 10px;">
+                            <li><strong>核心-卫星策略：</strong>宽基ETF作为核心（70%），行业/主题ETF作为卫星（30%）</li>
+                            <li><strong>定期定额：</strong>每月固定时间投入固定金额，摊平成本</li>
+                            <li><strong>价值平均：</strong>根据市场估值调整投入金额，低买高卖</li>
+                        </ul>
+                    </div>
+                    <div class="reveal">
+                        <div class="highlight-box" style="border-left-color: var(--tab-2);">
+                            <h3>资产配置</h3>
+                            <p style="font-size: var(--small-size);">通过ETF实现大类资产配置</p>
+                        </div>
+                        <ul class="bullet-list" style="margin-top: 10px;">
+                            <li><strong>股债平衡：</strong>股票ETF + 债券ETF，根据风险偏好调整比例</li>
+                            <li><strong>全球配置：</strong>A股ETF + 跨境ETF，分散单一市场风险</li>
+                            <li><strong>再平衡：</strong>定期调整各类资产比例，维持目标配置</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="highlight-box reveal" style="margin-top: 15px; border-left-color: var(--tab-3);">
+                    <h3>进阶策略</h3>
+                    <p style="font-size: var(--small-size);"><strong>网格交易：</strong>设定价格区间，低买高卖赚取波动收益 | <strong>ETF套利：</strong>利用一级市场申赎与二级市场价差套利（适合机构投资者） | <strong>配对交易：</strong>做多强势行业ETF，做空弱势行业ETF</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 15: Risk Management -->
+    <section class="slide" data-slide="15">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">15</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第四部分 · 投资指南</p>
+                <h2 class="reveal">风险控制要点</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <h3>市场风险</h3>
+                        <ul class="bullet-list">
+                            <li><strong>系统性风险：</strong>ETF无法规避市场整体下跌风险</li>
+                            <li><strong>行业集中风险：</strong>行业ETF波动大于宽基ETF</li>
+                            <li><strong>流动性风险：</strong>小规模ETF可能买卖价差大</li>
+                        </ul>
+                        <div class="highlight-box" style="margin-top: 15px;">
+                            <p style="font-size: var(--small-size);"><strong>应对：</strong>分散配置不同资产类别，避免重仓单一行业</p>
+                        </div>
+                    </div>
+                    <div class="reveal">
+                        <h3>操作风险</h3>
+                        <ul class="bullet-list">
+                            <li><strong>跟踪误差：</strong>ETF收益与目标指数存在偏差</li>
+                            <li><strong>折溢价：</strong>交易价格可能偏离基金净值</li>
+                            <li><strong>汇率风险：</strong>跨境ETF受汇率波动影响</li>
+                        </ul>
+                        <div class="highlight-box" style="margin-top: 15px; border-left-color: var(--tab-2);">
+                            <p style="font-size: var(--small-size);"><strong>应对：</strong>选择规模大、流动性好的产品，避免追高买入高溢价ETF</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="margin-top: 20px; padding: 15px; background: rgba(212,165,116,0.1); border-radius: 8px; text-align: center;">
+                    <p style="color: var(--text-primary); font-weight: 500;">⚠️ 重要提醒：ETF投资有风险，过往业绩不代表未来表现。请根据自身风险承受能力谨慎投资。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 16: Fee Structure -->
+    <section class="slide" data-slide="16">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">16</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第四部分 · 投资指南</p>
+                <h2 class="reveal">费用结构解析</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <h3>持有费用（年化）</h3>
+                        <table class="data-table">
+                            <tr>
+                                <th>费用类型</th>
+                                <th>费率范围</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>管理费</td>
+                                <td>0.15% - 0.8%</td>
+                                <td>每日计提，年化收取</td>
+                            </tr>
+                            <tr>
+                                <td>托管费</td>
+                                <td>0.05% - 0.1%</td>
+                                <td>银行托管服务费用</td>
+                            </tr>
+                            <tr>
+                                <td>指数使用费</td>
+                                <td>0.02% - 0.03%</td>
+                                <td>支付给指数公司</td>
+                            </tr>
+                        </table>
+                        <p style="margin-top: 10px; font-size: var(--small-size);"><strong>总费率：</strong>通常0.2%-1%每年，宽基ETF费率最低，跨境ETF费率较高</p>
+                    </div>
+                    <div class="reveal">
+                        <h3>交易费用</h3>
+                        <table class="data-table">
+                            <tr>
+                                <th>费用类型</th>
+                                <th>费率范围</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>交易佣金</td>
+                                <td>万1 - 万3</td>
+                                <td>券商收取，可协商</td>
+                            </tr>
+                            <tr>
+                                <td>印花税</td>
+                                <td>卖出时0.05%</td>
+                                <td>仅股票ETF卖出收取</td>
+                            </tr>
+                            <tr>
+                                <td>过户费</td>
+                                <td>成交金额的0.001%</td>
+                                <td>沪市收取</td>
+                            </tr>
+                        </table>
+                        <p style="margin-top: 10px; font-size: var(--small-size);"><strong>省钱技巧：</strong>选择低费率ETF、使用低佣金券商、减少频繁交易</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 17: How to Choose -->
+    <section class="slide" data-slide="17">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">17</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第四部分 · 投资指南</p>
+                <h2 class="reveal">如何选择ETF？</h2>
+                <div class="divider reveal"></div>
+                <div style="margin-top: 15px;">
+                    <div class="reveal">
+                        <h3>四步选择法</h3>
+                        <div style="display: flex; gap: 15px; margin-top: 15px;">
+                            <div style="flex: 1; text-align: center; padding: 15px; background: rgba(152,212,187,0.2); border-radius: 8px;">
+                                <div style="font-family: 'Bodoni Moda', serif; font-size: 2rem; color: var(--accent-warm);">01</div>
+                                <h3 style="margin-top: 10px;">确定投资目标</h3>
+                                <p style="font-size: var(--small-size); margin-top: 8px;">长期配置？短期波段？对冲避险？明确目标才能选对产品</p>
+                            </div>
+                            <div style="flex: 1; text-align: center; padding: 15px; background: rgba(199,184,234,0.2); border-radius: 8px;">
+                                <div style="font-family: 'Bodoni Moda', serif; font-size: 2rem; color: var(--accent-warm);">02</div>
+                                <h3 style="margin-top: 10px;">选择指数类型</h3>
+                                <p style="font-size: var(--small-size); margin-top: 8px;">宽基 for 稳健 | 行业 for 进攻 | 跨境 for 分散</p>
+                            </div>
+                            <div style="flex: 1; text-align: center; padding: 15px; background: rgba(244,184,197,0.2); border-radius: 8px;">
+                                <div style="font-family: 'Bodoni Moda', serif; font-size: 2rem; color: var(--accent-warm);">03</div>
+                                <h3 style="margin-top: 10px;">对比产品指标</h3>
+                                <p style="font-size: var(--small-size); margin-top: 8px;">规模 > 20亿 | 日均成交 > 5000万 | 跟踪误差 < 0.3%</p>
+                            </div>
+                            <div style="flex: 1; text-align: center; padding: 15px; background: rgba(168,216,234,0.2); border-radius: 8px;">
+                                <div style="font-family: 'Bodoni Moda', serif; font-size: 2rem; color: var(--accent-warm);">04</div>
+                                <h3 style="margin-top: 10px;">检查费率</h3>
+                                <p style="font-size: var(--small-size); margin-top: 8px;">管理费越低越好，长期复利差异显著</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-box reveal" style="margin-top: 20px;">
+                    <p style="color: var(--text-primary);"><strong>小白推荐组合：</strong>沪深300ETF（核心）+ 中证500ETF（成长）+ 黄金ETF（避险），三者组合覆盖大中小盘+避险资产</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 18: 2024 Trends -->
+    <section class="slide" data-slide="18">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">18</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">第五部分 · 趋势展望</p>
+                <h2 class="reveal">2024年ETF市场趋势</h2>
+                <div class="divider reveal"></div>
+                <div class="two-col" style="margin-top: 15px;">
+                    <div class="reveal">
+                        <h3>产品创新方向</h3>
+                        <ul class="bullet-list">
+                            <li><strong>Smart Beta普及：</strong>红利、低波、质量等因子ETF快速增长</li>
+                            <li><strong>ESG主题：</strong>碳中和、新能源、社会责任ETF受关注</li>
+                            <li><strong>跨境扩展：</strong>更多海外市场ETF，如印度、东南亚、中东</li>
+                            <li><strong>商品丰富：</strong>白银、铜、油气等大宗商品ETF</li>
+                            <li><strong>主动ETF：</strong>介于主动与被动之间的新产品形态</li>
+                        </ul>
+                    </div>
+                    <div class="reveal">
+                        <h3>市场格局变化</h3>
+                        <ul class="bullet-list">
+                            <li><strong>费率战持续：</strong>头部公司纷纷降费，低费率成标配</li>
+                            <li><strong>机构化加速：</strong>养老金、保险资金加大ETF配置</li>
+                            <li><strong>投顾结合：</strong>基金投顾服务推动ETF普及</li>
+                            <li><strong>规模集中：</strong>马太效应明显，头部ETF规模持续增长</li>
+                            <li><strong>工具化定位：</strong>ETF作为资产配置工具的地位确立</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="stat-grid reveal" style="margin-top: 20px;">
+                    <div class="stat-item">
+                        <span class="stat-value">3万亿+</span>
+                        <span class="stat-label">2024年预期规模</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">1000+</span>
+                        <span class="stat-label">产品数量</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">50%+</span>
+                        <span class="stat-label">机构持有占比</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 19: Summary -->
+    <section class="slide" data-slide="19">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="section-number">19</div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content">
+                <p class="subtitle reveal">总结回顾</p>
+                <h2 class="reveal">核心要点回顾</h2>
+                <div class="divider reveal"></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+                    <div class="reveal highlight-box">
+                        <h3>什么是ETF？</h3>
+                        <p style="font-size: var(--small-size);">交易所上市交易的开放式指数基金，兼具股票的交易便利和基金的分散优势</p>
+                    </div>
+                    <div class="reveal highlight-box" style="border-left-color: var(--tab-2);">
+                        <h3>ETF类型</h3>
+                        <p style="font-size: var(--small-size);">股票型（宽基/行业/主题/策略）、债券型、商品型、货币型、跨境ETF</p>
+                    </div>
+                    <div class="reveal highlight-box" style="border-left-color: var(--tab-3);">
+                        <h3>核心优势</h3>
+                        <p style="font-size: var(--small-size);">成本低、透明度高、交易便捷、分散风险、效率高</p>
+                    </div>
+                    <div class="reveal highlight-box" style="border-left-color: var(--tab-4);">
+                        <h3>投资策略</h3>
+                        <p style="font-size: var(--small-size);">定投、资产配置、核心-卫星策略，长期持有优于频繁交易</p>
+                    </div>
+                </div>
+                <div class="reveal" style="margin-top: 20px; text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(152,212,187,0.15), rgba(199,184,234,0.15)); border-radius: 8px;">
+                    <p style="font-size: clamp(1rem, 2vw, 1.3rem); color: var(--text-primary); font-weight: 500;">
+                        ETF是普通人参与资本市场、实现资产配置的高效工具<br>
+                        <span style="font-size: var(--body-size); color: var(--text-secondary);">选择适合自己的ETF，坚持长期投资，分享经济增长红利</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 20: Closing -->
+    <section class="slide" data-slide="20">
+        <div class="paper-card">
+            <div class="binder-holes">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+            </div>
+            <div class="tabs">
+                <div class="tab">基础</div>
+                <div class="tab">类型</div>
+                <div class="tab">市场</div>
+                <div class="tab">策略</div>
+                <div class="tab">展望</div>
+            </div>
+            <div class="card-content" style="text-align: center;">
+                <div class="reveal" style="margin-bottom: 30px;">
+                    <div style="font-family: 'Bodoni Moda', serif; font-size: clamp(4rem, 10vw, 8rem); color: var(--text-primary); opacity: 0.1; line-height: 1;">Thank You</div>
+                </div>
+                <h1 class="reveal" style="position: relative; z-index: 1;">感谢观看</h1>
+                <div class="divider reveal" style="margin: 25px auto;"></div>
+                <p class="reveal" style="font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                    中国国内ETF基金全格局<br>
+                    从入门到精通的完整指南
+                </p>
+                <div class="reveal" style="margin-top: 40px;">
+                    <p style="font-size: var(--small-size); color: var(--text-secondary);">
+                        <strong>风险提示：</strong>基金投资需谨慎，过往业绩不代表未来表现<br>
+                        本材料仅供参考，不构成投资建议
+                    </p>
+                </div>
+                <div class="reveal" style="margin-top: 30px; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 8px; display: inline-block;">
+                    <p style="font-size: var(--small-size); color: var(--text-secondary);">
+                        Style: Notebook Tabs | 20 Slides<br>
+                        Generated with Frontend Slides Skill
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* ===========================================
+           SLIDE PRESENTATION CONTROLLER
+           =========================================== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
+                this.progressBar = document.getElementById('progressBar');
+                this.navDotsContainer = document.getElementById('navDots');
+                this.init();
+            }
+
+            init() {
+                this.setupNavDots();
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.updateProgressBar();
+            }
+
+            setupNavDots() {
+                this.slides.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = 'nav-dot' + (index === 0 ? ' active' : '');
+                    dot.addEventListener('click', () => this.goToSlide(index));
+                    this.navDotsContainer.appendChild(dot);
+                });
+                this.navDots = document.querySelectorAll('.nav-dot');
+            }
+
+            setupIntersectionObserver() {
+                const options = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.5
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const slideIndex = Array.from(this.slides).indexOf(entry.target);
+                            this.currentSlide = slideIndex;
+                            this.updateNavDots();
+                            this.updateProgressBar();
+                        }
+                    });
+                }, options);
+
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowDown':
+                        case 'ArrowRight':
+                        case 'PageDown':
+                        case ' ':
+                            e.preventDefault();
+                            this.nextSlide();
+                            break;
+                        case 'ArrowUp':
+                        case 'ArrowLeft':
+                        case 'PageUp':
+                            e.preventDefault();
+                            this.prevSlide();
+                            break;
+                        case 'Home':
+                            e.preventDefault();
+                            this.goToSlide(0);
+                            break;
+                        case 'End':
+                            e.preventDefault();
+                            this.goToSlide(this.totalSlides - 1);
+                            break;
+                    }
+                });
+            }
+
+            setupTouchNav() {
+                let touchStartY = 0;
+                let touchEndY = 0;
+
+                document.addEventListener('touchstart', (e) => {
+                    touchStartY = e.changedTouches[0].screenY;
+                }, { passive: true });
+
+                document.addEventListener('touchend', (e) => {
+                    touchEndY = e.changedTouches[0].screenY;
+                    this.handleSwipe(touchStartY, touchEndY);
+                }, { passive: true });
+            }
+
+            handleSwipe(startY, endY) {
+                const threshold = 50;
+                const diff = startY - endY;
+
+                if (Math.abs(diff) > threshold) {
+                    if (diff > 0) {
+                        this.nextSlide();
+                    } else {
+                        this.prevSlide();
+                    }
+                }
+            }
+
+            goToSlide(index) {
+                if (index >= 0 && index < this.totalSlides) {
+                    this.slides[index].scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
+            nextSlide() {
+                if (this.currentSlide < this.totalSlides - 1) {
+                    this.goToSlide(this.currentSlide + 1);
+                }
+            }
+
+            prevSlide() {
+                if (this.currentSlide > 0) {
+                    this.goToSlide(this.currentSlide - 1);
+                }
+            }
+
+            updateNavDots() {
+                this.navDots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentSlide);
+                });
+            }
+
+            updateProgressBar() {
+                const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+                this.progressBar.style.width = progress + '%';
+            }
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => new SlidePresentation());
+        } else {
+            new SlidePresentation();
+        }
+    </script>
+</body>
+</html>
