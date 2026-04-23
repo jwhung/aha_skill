@@ -169,6 +169,26 @@
 
 ---
 
+#### 7. 多智能体量化交易推演 (trading-agents)
+
+**功能**：基于多智能体对抗辩论机制，模拟华尔街私募真实决策流程，生成专业级股票深度分析报告（PDF）。涵盖宏观研判、行业分析、个股基本面与技术面综合评估。
+
+**触发场景**：
+- 用户需要对某只股票进行全面分析
+- 提到"分析股票"、"股票研报"、"交易推演"、"投资分析"
+- 需要生成专业级股票分析 PDF 报告
+
+**核心特性**：
+- **多智能体辩论** —— 模拟多头研究员、空头研究员、风险经理、投资总监等角色的对抗式讨论
+- **全链路分析** —— 宏观经济 → 行业景气 → 公司基本面 → 技术面 → 资金面 → 新闻面
+- **PDF 报告输出** —— 自动生成专业排版的 PDF 研报文档
+- **灵活覆盖** —— 支持 A 股、美股、港股等多市场分析
+- **客观中立** —— 多空辩论机制确保分析不偏不倚
+
+**位置**：`trading-agents/SKILL.md`
+
+---
+
 ### 🚀 安装方法
 
 #### 方法一：直接复制
@@ -488,6 +508,26 @@ description: 简洁描述技能功能和使用场景。包含触发关键词和�
 - Accessibility design (WCAG 2.1 compliance, keyboard navigation, screen reader support, color contrast)
 
 **Location**: `modern-ui-designer/SKILL.md`
+
+---
+
+#### 7. Multi-Agent Quantitative Trading Analysis (trading-agents)
+
+**Purpose**: Multi-agent adversarial debate system simulating real Wall Street institutional decision-making. Generates professional-grade equity deep analysis reports (PDF) covering macro analysis, sector research, and comprehensive fundamental + technical assessment.
+
+**Trigger Scenarios**:
+- User needs comprehensive stock analysis
+- Mentions "analyze stock", "stock research report", "trading simulation", "investment analysis"
+- Needs to generate professional stock analysis PDF reports
+
+**Key Features**:
+- **Multi-Agent Debate** — Simulates adversarial discussions among bull researcher, bear researcher, risk manager, and CIO roles
+- **Full-Chain Analysis** — Macro economy → Sector outlook → Company fundamentals → Technicals → Capital flows → News sentiment
+- **PDF Report Output** — Auto-generates professionally formatted PDF research reports
+- **Multi-Market Coverage** — Supports A-shares, US stocks, Hong Kong stocks, and more
+- **Objective & Neutral** — Bull/bear debate mechanism ensures balanced, unbiased analysis
+
+**Location**: `trading-agents/SKILL.md`
 
 ---
 
