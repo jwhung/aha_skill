@@ -1,6 +1,10 @@
 ---
 name: trading-agents
-description: Multi-agent quantitative trading analysis system. Simulates Wall Street hedge fund decision-making with adversarial debate mechanism. Trigger: stock analysis, trading decisions, buy/sell recommendations, risk assessment, investment research, or any stock ticker (e.g., AAPL, TSLA, 600519.SH).
+description: >
+  Multi-agent quantitative trading analysis system. Simulates Wall Street
+  hedge fund decision-making with adversarial debate mechanism. Trigger: stock
+  analysis, trading decisions, buy/sell recommendations, risk assessment,
+  investment research, or any stock ticker.
 ---
 
 # TradingAgents — Multi-Agent Quantitative Trading Analysis System
